@@ -1,0 +1,46 @@
+---- #########################################################################
+---- # Copyright (C) OpenTX                                                  #
+-----#                                                                       #
+---- # License GPLv2: http://www.gnu.org/licenses/gpl-2.0.html               #
+---- #                                                                       #
+---- # This program is free software; you can redistribute it and/or modify  #
+---- # it under the terms of the GNU General Public License version 2 as     #
+---- # published by the Free Software Foundation.                            #
+---- #                                                                       #
+---- # This program is distributed in the hope that it will be useful        #
+---- # but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+---- # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
+---- # GNU General Public License for more details.                          #
+---- #                                                                       #
+---- #########################################################################
+local options = {
+  { "Gvar", VALUE, 1 , 1, 9},
+  { "TextCol", COLOR, WHITE },
+  { "Shadow", BOOL, 0 },
+  { "textTitle", STRING, "Flights:"}
+}
+
+local function create(zone, options)
+  local wgt= { zone=zone, options=options }
+  return wgt
+end
+
+local function update(wgt, options)
+  wgt.options = options
+end
+
+local function background(wgt)
+end
+
+function refresh(wgt) 
+  gvalue = getValue("gvar"..wgt.options.Gvar)
+  lcd.setColor(CUSTOM_COLOR, wgt.options.TextCol)
+  lcd.drawText(wgt.zone.x, wgt.zone.y, wgt.options.textTitle , LEFT + CUSTOM_COLOR + SMLSIZE);
+  if wgt.options.Shadow == 0 then
+    lcd.drawNumber(wgt.zone.x+5, wgt.zone.y+10, gvalue, LEFT +  CUSTOM_COLOR  + MIDSIZE );
+  else
+    lcd.drawNumber(wgt.zone.x+5, wgt.zone.y+10, gvalue, LEFT + CUSTOM_COLOR  + MIDSIZE + SHADOWED);
+  end
+end
+
+return { name="Flights", options=options, create=create, update=update, refresh=refresh, background=background }
